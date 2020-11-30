@@ -6,12 +6,15 @@ const path = require('path');
 
 http.createServer((req,res)=>{
 
-    let fileName = path.join(__dirname, "/" ? "index.html" : null)
+    
+    let fileName = path.join(__dirname,(req.url === "/" ? "index.html" : req.url))
 
     console.log("fileName: " + fileName);
 
     let extname = path.extname(fileName);
     let contentType;
+
+    console.log('extname: ' + extname)
 
     switch(extname){
 
@@ -32,11 +35,10 @@ http.createServer((req,res)=>{
     }
 
 
-    fs.readFile(fileName,(err,content)=>{
+    fs.readFile(fileName,"utf-8",(err,content)=>{
         if(err)throw err;
-        console.log(content)
         res.writeHead(200,{"Content-Type":contentType});
         res.end(content)
     })
 })
-.listen(3005,console.log(`Listening in on port 3005. ${process.env.user}`))
+.listen(3005,console.log(`Listening in on port 3005.`))
